@@ -9,18 +9,30 @@ on:
   push:
     # branches: [ main ]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: ["v*.*.*"]
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
+  POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+  BASE_URL: ${{secrets.BASE_URL}}
+  NEXTAUTH_URL: ${{secrets.NEXTAUTH_URL}}
+  ZOOM_CLIENT_ID: ${{secrets.ZOOM_CLIENT_ID}}
+  EMAIL_FROM: ${{secrets.EMAIL_FROM}}
+  EMAIL_SERVER_HOST: ${{secrets.EMAIL_SERVER_HOST}}
+  EMAIL_SERVER_PORT: ${{secrets.EMAIL_SERVER_PORT}}
+  EMAIL_SERVER_USER: ${{secrets.EMAIL_SERVER_USER}}
+  POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
+  GOOGLE_API_CREDENTIALS: ${{secrets.GOOGLE_API_CREDENTIALS}}
+  ZOOM_CLIENT_SECRET: ${{secrets.ZOOM_CLIENT_SECRET}}
+  CALENDSO_ENCRYPTION_KEY: ${{secrets.CALENDSO_ENCRYPTION_KEY}}
+  EMAIL_SERVER_PASSWORD: ${{secrets.EMAIL_SERVER_PASSWORD}}
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -29,7 +41,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
+      - name: Create env file for build
+        run: |
+          touch .env
+          echo IMAGE_NAME="$IMAGE_NAME" >> .env
+          echo POSTGRES_DB="$POSTGRES_DB" >> .env
+          echo BASE_URL="$BASE_URL" >> .env
+          echo NEXTAUTH_URL="$NEXTAUTH_URL" >> .env
+          echo ZOOM_CLIENT_ID="$ZOOM_CLIENT_ID" >> .env
+          echo EMAIL_FROM="$EMAIL_FROM" >> .env
+          echo EMAIL_SERVER_HOST="$EMAIL_SERVER_HOST" >> .env
+          echo EMAIL_SERVER_PORT="$EMAIL_SERVER_PORT" >> .env
+          echo EMAIL_SERVER_USER="$EMAIL_SERVER_USER" >> .env
+          echo POSTGRES_PASSWORD="$POSTGRES_PASSWORD" >> .env
+          echo DATABASE_URL="$DATABASE_URL" >> .env
+          echo GOOGLE_API_CREDENTIALS="$GOOGLE_API_CREDENTIALS" >> .env
+          echo ZOOM_CLIENT_SECRET="$ZOOM_CLIENT_SECRET" >> .env
+          echo CALENDSO_ENCRYPTION_KEY="$CALENDSO_ENCRYPTION_KEY" >> .env
+          echo EMAIL_SERVER_PASSWORD="$EMAIL_SERVER_PASSWORD" >> .env
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
